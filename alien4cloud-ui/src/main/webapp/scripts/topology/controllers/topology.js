@@ -146,9 +146,7 @@ define(function (require) {
       };
 
       // Topology can comes from application OR topology template
-      topologyServices.dao.get({
-        topologyId: $scope.topologyId
-      }, function(successResult) {
+      topologyServices.get($scope.topologyId).then(function(successResult) {
         $scope.refreshTopology(successResult.data);
         // init the group collapse indicators
         $scope.groupCollapsed = {};

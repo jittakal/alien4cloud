@@ -1,16 +1,5 @@
 package alien4cloud.paas.wf;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.elasticsearch.common.collect.Lists;
-import org.elasticsearch.common.collect.Maps;
-import org.springframework.stereotype.Component;
-
 import alien4cloud.component.ICSARRepositorySearchService;
 import alien4cloud.exception.NotFoundException;
 import alien4cloud.model.components.IndexedToscaElement;
@@ -22,6 +11,13 @@ import alien4cloud.paas.wf.util.WorkflowUtils;
 import alien4cloud.paas.wf.validation.WorkflowValidator;
 import alien4cloud.topology.task.TaskCode;
 import alien4cloud.topology.task.WorkflowTask;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.collect.Lists;
+import org.elasticsearch.common.collect.Maps;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -42,20 +38,20 @@ public class WorkflowsBuilderService {
     @Resource
     private WorkflowValidator workflowValidator;
 
-    public TopologyContext initWorkflows(TopologyContext topologyContext) {
+    private TopologyContext initWorkflows(TopologyContext topologyContext, boolean overrideExisting) {
         Map<String, Workflow> wfs = topologyContext.getTopology().getWorkflows();
         if (wfs == null) {
             wfs = Maps.newLinkedHashMap();
             topologyContext.getTopology().setWorkflows(wfs);
         }
-        if (!wfs.containsKey(Workflow.INSTALL_WF)) {
+        if (overrideExisting || !wfs.containsKey(Workflow.INSTALL_WF)) {
             Workflow install = new Workflow();
             install.setStandard(true);
             install.setName(Workflow.INSTALL_WF);
             wfs.put(Workflow.INSTALL_WF, install);
             reinitWorkflow(Workflow.INSTALL_WF, topologyContext);
         }
-        if (!wfs.containsKey(Workflow.UNINSTALL_WF)) {
+        if (overrideExisting || !wfs.containsKey(Workflow.UNINSTALL_WF)) {
             Workflow uninstall = new Workflow();
             uninstall.setStandard(true);
             uninstall.setName(Workflow.UNINSTALL_WF);
@@ -63,6 +59,14 @@ public class WorkflowsBuilderService {
             reinitWorkflow(Workflow.UNINSTALL_WF, topologyContext);
         }
         return topologyContext;
+    }
+
+    public TopologyContext initWorkflows(TopologyContext topologyContext) {
+        return initWorkflows(topologyContext, false);
+    }
+
+    public TopologyContext reinitWorkflows(TopologyContext topologyContext) {
+        return initWorkflows(topologyContext, true);
     }
 
     public Workflow ceateWorkflow(Topology topology) {

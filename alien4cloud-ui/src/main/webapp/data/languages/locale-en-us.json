@@ -110,6 +110,21 @@
       "PLAN" : "Workflow",
       "PROPERTIES_INPUTS" : "Input properties",
       "PROPERTIES_OUTPUTS" : "Output properties",
+      "RECOVERY" : {
+        "TITLE" : "Topology recevory",
+        "DO_NOTHING" : "Do nothing",
+        "DESCRIPTION" : "The following topology's dependencies have been updated:",
+        "CHOICE_ASK" : "What would you like to do with the topology ?",
+        "RECOVER" : {
+          "TITLE" : "Recover",
+          "DESCRIPTION" : "Try to recover the topology, by synchronizing it with the exisiting dependencies."
+        },
+        "RESET" : {
+          "TITLE" : "Reset",
+          "DESCRIPTION" : "Delete everything from the topology, leaving it completely empty."
+        },
+        "SUCCESS_MSGE" : "Topology updated successfuly!"
+      },
       "REFERENCE" : "Reference",
       "RELATIONSHIPS" : "Relationships",
       "REPLACE_NODETEMPLATE" : "Replace",

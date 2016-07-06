@@ -131,6 +131,21 @@
         "REQUIREMENTS" : "Pré-requis",
         "TITLE" : "Substitutions"
       },
+      "RECOVERY":{
+        "TITLE": "Dépendences de topologie modifées",
+        "DO_NOTHING": "Ne rien faire",
+        "DESCRIPTION": "Les dépendences suivantes de la topology ont été modifiées:",
+        "CHOICE_ASK": "Que souhaitez vous faire de la topologie ?",
+        "RECOVER": {
+          "TITLE": "Réparation de topology",
+          "DESCRIPTION": "Essayer de réparer la topology, en la synchronisant avec les dépendences existantes."
+        },
+        "RESET": {
+          "TITLE": "Réinitialiser",
+          "DESCRIPTION": "Tout supprimer de la topologie, la laissant vide."
+        },
+        "SUCCESS_MSGE" : "Topologie mise à jour!!"
+      },
       "TASK" : {
         "CREATE_TOPOLOGY_MESSAGE" : "Pas de topologie trouvée! Créez en une et ajoutez y des noeuds",
         "EMPTY_TOPOLOGY_MESSAGE" : "La topologie actuelle est vide. Ajoutez y des noeuds",

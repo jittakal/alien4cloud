@@ -1,22 +1,27 @@
 // define the rest api elements to work with topology edition.
 define(function (require) {
   'use strict';
-  
-  var modules = require('modules');
 
-  modules.get('a4c-topology-editor', ['ngResource']).factory('topologyServices', ['$resource',
-    function($resource) {
+  var modules = require('modules');
+  var _ = require('lodash');
+  require('scripts/topology/services/topology_recovery_service');
+
+  modules.get('a4c-topology-editor', ['ngResource']).factory('topologyServices', ['$resource', 'topologyRecoveryServices',
+    function($resource, topologyRecoveryServices) {
       // Service that gives access to create topology
       var topologyScalingPoliciesDAO = $resource('rest/latest/topologies/:topologyId/scalingPolicies/:nodeTemplateName', {}, {});
 
-      var topologyDAO = $resource('rest/latest/topologies/:topologyId', {}, {
-        'create': {
-          method: 'POST'
-        },
-        'get': {
-          method: 'GET'
-        }
-      });
+      var getTopology = function(topologyId){
+        return topologyRecoveryServices.handleDependenciesUpdates(topologyId).then(function(result){
+          if(_.definedPath(result, 'data')){
+            return result;
+          }
+
+          return $resource('rest/latest/topologies/'+topologyId).get().$promise.then(function(result2){
+            return result2;
+          });
+        });
+      };
 
       var addNodeTemplate = $resource('rest/latest/topologies/:topologyId/nodetemplates/:nodeTemplateName', {}, {
         'add': {
@@ -468,7 +473,7 @@ define(function (require) {
       var topologyVersionResource = $resource('rest/latest/topologies/:topologyId/version');
 
       return {
-        'dao': topologyDAO,
+        'get': getTopology,
         'inputs': updateInput,
         'nodeTemplate': {
           'add': addNodeTemplate.add,
@@ -522,7 +527,7 @@ define(function (require) {
         'isValid': isValid.get,
         'getYaml': yaml.get,
         'cloud': cloudResource,
-        'getTopologyVersion' : topologyVersionResource.get
+        'getTopologyVersion' : topologyVersionResource.get,
       };
     }
   ]);

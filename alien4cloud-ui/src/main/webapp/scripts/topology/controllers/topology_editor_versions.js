@@ -40,9 +40,7 @@ define(function (require) {
         change: function(selectedVersion) {
           var instance = this;
           this.setSelectedVersionByName(selectedVersion.version);
-          topologyServices.dao.get({
-            topologyId: instance.scope.topologyId
-          }, function(successResult) {
+          topologyServices.get(instance.scope.topologyId).then(function(successResult) {
             instance.scope.refreshTopology(successResult.data);
           });
         }

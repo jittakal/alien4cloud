@@ -51,7 +51,7 @@ define(function (require) {
           $scope.stopEvent(); // stop to listen for instance events
           $scope.setTopologyId($scope.application.id, appEnvironments.selected.id, null).$promise.then(function(result) {
             // get informations from this topology
-            $scope.processTopologyInformations(result.data).$promise.then(function() {
+            $scope.processTopologyInformations(result.data).then(function() {
               $scope.refreshInstancesStatuses($scope.application.id, appEnvironments.selected.id, pageStateId);
             });
           });

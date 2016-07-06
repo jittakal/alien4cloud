@@ -124,7 +124,7 @@ define(function(require) {
           var processTopologyInfoResult = $scope.processTopologyInformations($scope.topologyId);
 
           // when the selected environment is deployed => refresh output properties
-          processTopologyInfoResult.$promise.then(function() {
+          processTopologyInfoResult.then(function() {
             if ($scope.deploymentContext.selectedEnvironment.status === 'DEPLOYED') {
               $scope.refreshInstancesStatuses($scope.application.id, $scope.deploymentContext.selectedEnvironment.id, pageStateId);
             }
@@ -230,7 +230,7 @@ define(function(require) {
           } else {
             $scope.stopEvent();
             $scope.setTopologyId($scope.application.id, $scope.deploymentContext.selectedEnvironment.id, checkTopology).$promise.then(function(result) {
-              $scope.processTopologyInformations(result.data).$promise.then(function() {
+              $scope.processTopologyInformations(result.data).then(function() {
                 $scope.refreshInstancesStatuses($scope.application.id, $scope.deploymentContext.selectedEnvironment.id, pageStateId);
               });
             });
