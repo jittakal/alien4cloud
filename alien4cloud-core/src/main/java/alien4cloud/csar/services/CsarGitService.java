@@ -1,30 +1,12 @@
 package alien4cloud.csar.services;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.inject.Inject;
-
-import alien4cloud.model.components.CSARSource;
-import org.eclipse.jgit.api.Git;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-
-import com.google.common.collect.Lists;
-
+import alien4cloud.component.repository.exception.CSARUsedInActiveDeployment;
 import alien4cloud.component.repository.exception.CSARVersionAlreadyExistsException;
 import alien4cloud.dao.IGenericSearchDAO;
 import alien4cloud.exception.GitException;
 import alien4cloud.git.RepositoryManager;
 import alien4cloud.model.components.CSARDependency;
+import alien4cloud.model.components.CSARSource;
 import alien4cloud.model.components.Csar;
 import alien4cloud.model.git.CsarDependenciesBean;
 import alien4cloud.model.git.CsarGitCheckoutLocation;
@@ -33,7 +15,22 @@ import alien4cloud.tosca.ArchiveUploadService;
 import alien4cloud.tosca.parser.ParsingException;
 import alien4cloud.tosca.parser.ParsingResult;
 import alien4cloud.utils.FileUtil;
+import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import javax.annotation.Resource;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.Git;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 
 @Slf4j
 @Service
@@ -166,6 +163,9 @@ public class CsarGitService {
             // TODO Actually add a parsing result with error.
             throw new GitException("Failed to import archive from git as it cannot be parsed", e);
         } catch (CSARVersionAlreadyExistsException e) {
+            return parsingResult;
+        } catch (CSARUsedInActiveDeployment e) {
+            // TODO Actually add a parsing result with error.
             return parsingResult;
         }
     }

@@ -1,6 +1,6 @@
 tosca_definitions_version: alien_dsl_1_2_0
 
-template_name: test-topo-synch-types
+template_name: test-topo-recovery-types
 template_author: alien
 template_version: 0.1-SNAPSHOT
 description: Contains the normative types definition.

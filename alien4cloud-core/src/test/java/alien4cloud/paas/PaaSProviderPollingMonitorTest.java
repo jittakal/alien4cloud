@@ -3,34 +3,31 @@ package alien4cloud.paas;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import alien4cloud.dao.IGenericSearchDAO;
+import alien4cloud.paas.model.DeploymentStatus;
+import alien4cloud.paas.model.PaaSDeploymentStatusMonitorEvent;
+import alien4cloud.paas.model.PaaSMessageMonitorEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Date;
-
 import javax.annotation.Resource;
-
 import org.elasticsearch.client.Client;
 import org.elasticsearch.mapping.ElasticSearchClient;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import alien4cloud.dao.IGenericSearchDAO;
-import alien4cloud.paas.PaaSProviderPollingMonitor;
-import alien4cloud.paas.model.DeploymentStatus;
-import alien4cloud.paas.model.PaaSDeploymentStatusMonitorEvent;
-import alien4cloud.paas.model.PaaSMessageMonitorEvent;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Test monitoring events recovery
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:application-context-test.xml")
+@Ignore
 public class PaaSProviderPollingMonitorTest {
 
     @Resource(name = "alien-es-dao")
@@ -92,8 +89,8 @@ public class PaaSProviderPollingMonitorTest {
     }
 
     @Test
-    public void testLoadEventsFromLastRegistered() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException,
-            JsonProcessingException, InterruptedException {
+    public void testLoadEventsFromLastRegistered()
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, JsonProcessingException, InterruptedException {
 
         // init with some events
         initEvents();

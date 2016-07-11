@@ -2,13 +2,13 @@ package alien4cloud.it;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = {
         //
-        // "classpath:alien/rest/topology"
+        "classpath:alien/rest/topology"
+        // "classpath:alien/rest/topology/complex_properties.feature"
         // "classpath:alien/rest/topology/get_topology.feature"
         // "classpath:alien/rest/topology/out_properties.feature"
         // "classpath:alien/rest/topology/inputs_properties.feature"
@@ -22,10 +22,11 @@ import org.junit.runner.RunWith;
         // "classpath:alien/rest/topology/scaling.feature"
         // "classpath:alien/rest/topology/validate_topology.feature"
         // "classpath:alien/rest/topology/validate_topology_with_meta_properties.feature"
-        "classpath:alien/rest/topology/topology_composition.feature"
+        // "classpath:alien/rest/topology/topology_composition.feature"
         // "classpath:alien/rest/topology/workflow_edition.feature"
+        // "classpath:alien/rest/topology/topology_recovery.feature"
         //
 }, format = { "pretty", "html:target/cucumber/topology", "json:target/cucumber/cucumber-topology.json" })
-//@Ignore
+// @Ignore
 public class RunTopologyIT {
 }

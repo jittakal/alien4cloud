@@ -303,7 +303,7 @@ public final class FileUtil {
     @SneakyThrows({ Exception.class })
     public static String getSHA1Checksum(Path path) {
         if (!Files.exists(path)) {
-            throw new FileNotFoundException("File not found " + path);
+            throw new FileNotFoundException("File not found in hash processor" + path);
         }
         byte[] b = createSHA1Checksum(path);
         String result = "";

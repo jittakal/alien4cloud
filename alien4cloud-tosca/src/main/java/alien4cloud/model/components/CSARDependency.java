@@ -19,7 +19,7 @@ import org.elasticsearch.mapping.IndexType;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = { "name", "version" })
 @ToString
 public class CSARDependency {
     @NonNull

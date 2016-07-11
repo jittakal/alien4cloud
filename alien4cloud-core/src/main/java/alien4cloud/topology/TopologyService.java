@@ -376,7 +376,7 @@ public class TopologyService {
         String archiveName = element.getArchiveName();
         String archiveVersion = element.getArchiveVersion();
         CSARDependency topologyDependency = getDependencyWithName(topology, archiveName);
-        CSARDependency toLoadDependency = null;
+        CSARDependency toLoadDependency = topologyDependency;
         CachedFinder<Csar> finder = buildCaheFinder();
         if (topologyDependency != null) {
             int comparisonResult = VersionUtil.compare(archiveVersion, topologyDependency.getVersion());

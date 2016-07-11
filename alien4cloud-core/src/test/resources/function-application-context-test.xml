@@ -22,7 +22,7 @@
 		alien4cloud.tosca.*,
 		alien4cloud.images,
 		alien4cloud.application,
-		alien4cloud.csar.*,
+		alien4cloud.csar,
 		org.elasticsearch.mapping,
 		alien4cloud.orchestrators,
 		alien4cloud.paas,
@@ -34,7 +34,6 @@
 		alien4cloud.utils.services">
     <context:exclude-filter type="regex"
                             expression="alien4cloud.orchestrators.services.OrchestratorSecurityService"/>
-    <context:exclude-filter type="regex" expression="alien4cloud.configuration.ApplicationBootstrap"/>
     <context:exclude-filter type="regex" expression="alien4cloud.configuration.ApplicationBootstrap"/>
     <context:exclude-filter type="regex" expression="alien4cloud.security.groups.DefaultGroup"/>
   </context:component-scan>

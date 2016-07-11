@@ -1,6 +1,6 @@
 tosca_definitions_version: alien_dsl_1_2_0
 
-template_name: test-topo-synch-types
+template_name: test-topo-recovery-types
 template_author: alien
 template_version: 0.1-SNAPSHOT
 description: Contains the normative types definition.
@@ -13,7 +13,6 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     requirements:
       - connect: alien.test.capabilities.TestComponentConnects
-        type: alien.test.relationships.TestComponentConnectsTo
         occurrences: [1, 1]
       - capa_upperbound_test: alien.test.capabilities.CapaUpperBoundTest
         type: alien.test.relationships.CapaUpperBoundTest
@@ -55,8 +54,6 @@ capability_types:
     derived_from: tosca.capabilities.Node
 
 relationship_types:
-  alien.test.relationships.TestComponentConnectsTo:
-    derived_from: tosca.relationships.DependsOn
   alien.test.relationships.CapaUpperBoundTest:
     derived_from: tosca.relationships.DependsOn
   alien.test.relationships.ReqUpperBoundTest:

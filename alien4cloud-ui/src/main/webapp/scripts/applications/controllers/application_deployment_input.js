@@ -30,7 +30,7 @@ define(function(require) {
 
         $scope._=_;
         $scope.isAllowedInputDeployment = function() {
-          return !_.isEmpty($filter('allowedInputs')($scope.deploymentContext.deploymentTopologyDTO.topology.inputs));
+          return !_.isEmpty($filter('allowedInputs')(_.get($scope.deploymentContext, 'deploymentTopologyDTO.topology.inputs')));
         };
 
         /* Handle properties inputs */
@@ -95,7 +95,7 @@ define(function(require) {
             }
           });
         };
-        $scope.refreshOrchestratorDeploymentPropertyDefinitions();
+        // $scope.refreshOrchestratorDeploymentPropertyDefinitions();
 
         $scope.updateDeploymentProperty = function(propertyDefinition, propertyName, propertyValue) {
           if (propertyValue === $scope.deploymentContext.deploymentTopologyDTO.topology.providerDeploymentProperties[propertyName]) {
@@ -126,6 +126,13 @@ define(function(require) {
             }
           }).$promise;
         };
+
+        // Watch over deployment topology to initialize selected location
+        $scope.$watch('deploymentContext.deploymentTopologyDTO.topology.orchestratorId', function(newValue) {
+          if(_.defined(newValue)){
+            $scope.refreshOrchestratorDeploymentPropertyDefinitions();
+          }
+        });
       }
     ]); //controller
 }); //Define

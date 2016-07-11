@@ -1,20 +1,17 @@
 package alien4cloud.tosca;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 import alien4cloud.component.ICSARRepositoryIndexerService;
 import alien4cloud.component.ICSARRepositorySearchService;
 import alien4cloud.component.repository.ICsarRepositry;
+import alien4cloud.component.repository.exception.CSARUsedInActiveDeployment;
 import alien4cloud.component.repository.exception.CSARVersionAlreadyExistsException;
 import alien4cloud.csar.services.CsarService;
-import alien4cloud.model.components.*;
+import alien4cloud.model.components.CSARDependency;
+import alien4cloud.model.components.CSARSource;
+import alien4cloud.model.components.Csar;
+import alien4cloud.model.components.IndexedInheritableToscaElement;
+import alien4cloud.model.components.IndexedToscaElement;
+import alien4cloud.model.deployment.DeploymentTopology;
 import alien4cloud.model.templates.TopologyTemplate;
 import alien4cloud.model.templates.TopologyTemplateVersion;
 import alien4cloud.model.topology.Topology;
@@ -27,6 +24,13 @@ import alien4cloud.tosca.parser.ParsingErrorLevel;
 import alien4cloud.tosca.parser.ToscaParsingUtil;
 import alien4cloud.tosca.parser.impl.ErrorCode;
 import alien4cloud.utils.VersionUtil;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -56,17 +60,17 @@ public class ArchiveIndexer {
      * @param archivePath The optional path of the archive (should be null if the archive has been java-generated and not parsed).
      * @param parsingErrors The non-null list of parsing errors in which to add errors.
      * @throws CSARVersionAlreadyExistsException
+     * @throws CSARUsedInActiveDeployment
      */
     public void importArchive(final ArchiveRoot archiveRoot, CSARSource source, Path archivePath, List<ParsingError> parsingErrors)
-            throws CSARVersionAlreadyExistsException {
+            throws CSARVersionAlreadyExistsException, CSARUsedInActiveDeployment {
         String archiveName = archiveRoot.getArchive().getName();
         String archiveVersion = archiveRoot.getArchive().getVersion();
         Csar archive = csarService.getIfExists(archiveName, archiveVersion);
-
         // Cannot override RELEASED CSAR .
-        if (archive != null && !VersionUtil.isSnapshot(archive.getVersion())) {
-            throw new CSARVersionAlreadyExistsException("CSAR: " + archiveName + ", Version: " + archiveVersion + " already exists in the repository.");
-        }
+        checkNotRealeased(archive);
+        // Cannot override a CSAR used in an active deployment
+        checkNotUsedInActiveDeployment(archive);
 
         // save the archive (before we index and save other data so we can cleanup if anything goes wrong).
         if (source == null) {
@@ -135,6 +139,22 @@ public class ArchiveIndexer {
                 topologyServiceCore.createTopologyTemplate(topology, archiveName, archiveRoot.getTopologyTemplateDescription(), archiveVersion);
             }
             topologyServiceCore.updateSubstitutionType(topology);
+        }
+    }
+
+    private void checkNotUsedInActiveDeployment(Csar csar) throws CSARUsedInActiveDeployment {
+        if (csar != null) {
+            DeploymentTopology[] depoyedTopologies = csarService.getDependentDeploymentTopology(csar.getName(), csar.getVersion());
+            if (ArrayUtils.isNotEmpty(depoyedTopologies)) {
+                throw new CSARUsedInActiveDeployment("CSAR: " + csar.getName() + ", Version: " + csar.getVersion() + " is used in an active deployment.");
+            }
+        }
+    }
+
+    private void checkNotRealeased(Csar archive) throws CSARVersionAlreadyExistsException {
+        if (archive != null && !VersionUtil.isSnapshot(archive.getVersion())) {
+            throw new CSARVersionAlreadyExistsException(
+                    "CSAR: " + archive.getName() + ", Version: " + archive.getVersion() + " already exists in the repository.");
         }
     }
 

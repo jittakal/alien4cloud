@@ -13,6 +13,7 @@ define(function(require) {
   require('scripts/applications/services/application_version_services');
   require('scripts/applications/services/deployment_topology_processor.js');
   require('scripts/applications/services/tasks_processor.js');
+    require('scripts/topology/services/topology_recovery_service');
 
   require('scripts/applications/controllers/application_deployment_locations');
   require('scripts/applications/controllers/application_deployment_match');
@@ -86,7 +87,8 @@ define(function(require) {
           var deploymentContextResult = {
             selectedEnvironment: appEnvironments.selected
           };
-          return refreshDeploymentContext(deploymentContextResult, application.data, deploymentTopologyServices, deploymentTopologyProcessor, tasksProcessor, menu);
+          return deploymentContextResult;
+          // return refreshDeploymentContext(deploymentContextResult, application.data, deploymentTopologyServices, deploymentTopologyProcessor, tasksProcessor, menu);
         }
       ]
     },
@@ -116,18 +118,19 @@ define(function(require) {
         // Retrieval and validation of the topology associated with the deployment.
         var checkTopology = function() {
 
-          $scope.isTopologyValid($scope.topologyId, $scope.deploymentContext.selectedEnvironment.id).$promise.then(function(validTopologyResult) {
-            $scope.validTopologyDTO = validTopologyResult.data;
-            tasksProcessor.processAll($scope.validTopologyDTO);
-          });
-
-          var processTopologyInfoResult = $scope.processTopologyInformations($scope.topologyId);
+          //first do this so that, by dependencies updates handling, the tology will be updated for the validation
+          var processTopologyInfoResult= $scope.processTopologyInformations($scope.topologyId);
 
           // when the selected environment is deployed => refresh output properties
           processTopologyInfoResult.then(function() {
             if ($scope.deploymentContext.selectedEnvironment.status === 'DEPLOYED') {
               $scope.refreshInstancesStatuses($scope.application.id, $scope.deploymentContext.selectedEnvironment.id, pageStateId);
             }
+
+            $scope.isTopologyValid($scope.topologyId, $scope.deploymentContext.selectedEnvironment.id).$promise.then(function(validTopologyResult) {
+              $scope.validTopologyDTO = validTopologyResult.data;
+              tasksProcessor.processAll($scope.validTopologyDTO);
+            });
           });
 
         };

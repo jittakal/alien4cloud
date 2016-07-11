@@ -67,7 +67,7 @@ public class TopologyRecoveryController {
     @ApiOperation(value = "Recover the topology, synch it with the existing element in the database of a set of csar dependencies.", notes = "Returns a synchronized topology with it's details. Application role required [ APPLICATION_MANAGER | APPLICATION_DEVOPS ]")
     @RequestMapping(value = "/{topologyId}/recover", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
-    public RestResponse<TopologyDTO> synchronizeTopology(@PathVariable String topologyId, @RequestBody Set<CSARDependency> dependenciesToSynch) {
+    public RestResponse<TopologyDTO> recoverTopology(@PathVariable String topologyId, @RequestBody Set<CSARDependency> dependenciesToSynch) {
         Topology topology = topologyServiceCore.getOrFail(topologyId);
         topologyService.checkAuthorizations(topology, ApplicationRole.APPLICATION_MANAGER, ApplicationRole.APPLICATION_DEVOPS,
                 ApplicationRole.APPLICATION_USER);

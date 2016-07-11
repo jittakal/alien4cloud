@@ -1,5 +1,6 @@
 package alien4cloud.tosca;
 
+import alien4cloud.component.repository.exception.CSARUsedInActiveDeployment;
 import alien4cloud.component.repository.exception.CSARVersionAlreadyExistsException;
 import alien4cloud.model.components.CSARDependency;
 import alien4cloud.model.components.CSARSource;
@@ -47,9 +48,10 @@ public class ArchiveUploadService {
      * @return The Csar object from the parsing.
      * @throws ParsingException
      * @throws CSARVersionAlreadyExistsException
+     * @throws CSARUsedInActiveDeployment
      */
     @ToscaContextual
-    public ParsingResult<Csar> upload(Path path, CSARSource csarSource) throws ParsingException, CSARVersionAlreadyExistsException {
+    public ParsingResult<Csar> upload(Path path, CSARSource csarSource) throws ParsingException, CSARVersionAlreadyExistsException, CSARUsedInActiveDeployment {
         // parse the archive.
         ParsingResult<ArchiveRoot> parsingResult = parser.parse(path);
 

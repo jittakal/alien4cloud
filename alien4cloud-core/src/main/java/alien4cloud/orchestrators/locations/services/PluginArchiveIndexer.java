@@ -1,6 +1,7 @@
 package alien4cloud.orchestrators.locations.services;
 
 import alien4cloud.component.ICSARRepositoryIndexerService;
+import alien4cloud.component.repository.exception.CSARUsedInActiveDeployment;
 import alien4cloud.component.repository.exception.CSARVersionAlreadyExistsException;
 import alien4cloud.csar.services.CsarService;
 import alien4cloud.dao.IGenericSearchDAO;
@@ -112,14 +113,16 @@ public class PluginArchiveIndexer {
      */
     public void indexOrchestratorArchives(IOrchestratorPluginFactory<IOrchestratorPlugin<?>, ?> orchestratorFactory,
             IOrchestratorPlugin<Object> orchestratorInstance) {
-        try {
-            for (PluginArchive pluginArchive : orchestratorInstance.pluginArchives()) {
+        for (PluginArchive pluginArchive : orchestratorInstance.pluginArchives()) {
+            try {
                 archiveIndexer.importArchive(pluginArchive.getArchive(), CSARSource.ORCHESTRATOR, pluginArchive.getArchiveFilePath(),
                         Lists.<ParsingError> newArrayList());
                 publishLocationTypeIndexedEvent(pluginArchive.getArchive().getNodeTypes().values(), orchestratorFactory, null);
+            } catch (CSARVersionAlreadyExistsException e) {
+                log.info("Skipping orchestrator archive import as the released version already exists in the repository. " + e.getMessage());
+            } catch (CSARUsedInActiveDeployment e) {
+                log.info("Skipping orchestrator archive import as it is used in an active deployment. " + e.getMessage());
             }
-        } catch (CSARVersionAlreadyExistsException e) {
-            log.info("Skipping orchestrator archive import as the released version already exists in the repository.");
         }
     }
 
@@ -138,6 +141,8 @@ public class PluginArchiveIndexer {
             archiveIndexer.importArchive(archive, CSARSource.ORCHESTRATOR, pluginArchive.getArchiveFilePath(), parsingErrors);
         } catch (CSARVersionAlreadyExistsException e) {
             log.info("Skipping location archive import as the released version already exists in the repository.");
+        } catch (CSARUsedInActiveDeployment e) {
+            log.info("Skipping orchestrator archive import as it is used in an active deployment. " + e.getMessage());
         }
 
         // Publish event to allow plugins to post-process elements (portability plugin for example).
