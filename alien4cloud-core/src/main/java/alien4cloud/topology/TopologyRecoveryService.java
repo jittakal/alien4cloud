@@ -16,6 +16,7 @@ import alien4cloud.paas.wf.WorkflowsBuilderService;
 import alien4cloud.paas.wf.WorkflowsBuilderService.TopologyContext;
 import alien4cloud.topology.validation.TopologyCapabilityBoundsValidationServices;
 import alien4cloud.topology.validation.TopologyRequirementBoundsValidationServices;
+import alien4cloud.tosca.context.ToscaContextual;
 import alien4cloud.tosca.topology.NodeTemplateBuilder;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -79,6 +80,7 @@ public class TopologyRecoveryService {
      * @param updatedDependencies The dependencies representing the archives that have been updated since added into the topology
      * @param topology The topology to synchronize
      */
+    @ToscaContextual
     public void recoverTopology(Collection<CSARDependency> updatedDependencies, Topology topology) {
         // do not process if the topology is empty
         if (topology.isEmpty()) {
