@@ -38,7 +38,7 @@ public class ImportParser extends DefaultParser<CSARDependency> {
                     context.getParsingErrors().add(new ParsingError(ParsingErrorLevel.WARNING, ErrorCode.MISSING_DEPENDENCY, "Import definition is not valid",
                             node.getStartMark(), "Specified dependency is not found in Alien 4 Cloud repository.", node.getEndMark(), valueAsString));
                 } else {
-                    dependency.setLastParsedHash(csar.getLastParsedHash());
+                    dependency.setHash(csar.getHash());
                     ToscaContext.get().addDependency(dependency);
                 }
                 return dependency;

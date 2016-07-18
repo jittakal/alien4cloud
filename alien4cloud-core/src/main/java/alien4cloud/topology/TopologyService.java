@@ -426,7 +426,7 @@ public class TopologyService {
         csar = finder.find(Csar.class, csar.getId());
         csar = csarService.findByIds(FetchContext.SUMMARY, csar.getId()).get(csar.getId());
         if (csar != null) {
-            newDependency.setLastParsedHash(csar.getLastParsedHash());
+            newDependency.setHash(csar.getHash());
         }
         return newDependency;
     }

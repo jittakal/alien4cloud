@@ -70,8 +70,8 @@ public class TopologyRecoveryService {
 
     private boolean hasChangedSinceLastAddedIntoTopology(CSARDependency dependency) {
         Csar csar = csarService.getIfExists(dependency.getName(), dependency.getVersion());
-        return (StringUtils.isNotBlank(dependency.getLastParsedHash()) || StringUtils.isNotBlank(csar.getLastParsedHash()))
-                && !Objects.equals(dependency.getLastParsedHash(), csar.getLastParsedHash());
+        return (StringUtils.isNotBlank(dependency.getHash()) || StringUtils.isNotBlank(csar.getHash()))
+                && !Objects.equals(dependency.getHash(), csar.getHash());
     }
 
     /**

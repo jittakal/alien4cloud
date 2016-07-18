@@ -65,7 +65,7 @@ public class Csar {
      * Hash of the main yaml file included in the csar
      */
     @FetchContext(contexts = { SUMMARY }, include = { true })
-    private String lastParsedHash;
+    private String hash;
 
     /** Default constructor */
     public Csar() {

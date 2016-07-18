@@ -92,9 +92,9 @@ public class PluginArchiveIndexer {
             if (csar == null) {
                 // index the required archive
                 indexArchive(pluginArchive, orchestrator, location);
-                lastParsedHash = archive.getArchive().getLastParsedHash();
+                lastParsedHash = archive.getArchive().getHash();
             } else {
-                lastParsedHash = csar.getLastParsedHash();
+                lastParsedHash = csar.getHash();
             }
             if (archive.getArchive().getDependencies() != null) {
                 dependencies.addAll(archive.getArchive().getDependencies());

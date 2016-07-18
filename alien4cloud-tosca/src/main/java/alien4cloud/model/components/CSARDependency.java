@@ -33,5 +33,5 @@ public class CSARDependency {
     /**
      * Hash of the main yaml file included in the csar
      */
-    private String lastParsedHash;
+    private String hash;
 }
